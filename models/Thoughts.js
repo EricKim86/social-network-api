@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create User model
+// Schema to create thoughts model
 const thoughtsSchema = new Schema(
     {
         thoughtText: {
@@ -10,13 +10,14 @@ const thoughtsSchema = new Schema(
             max: 280,
         },
         createdAt: {
-            Date: { type: Date, default: Date.now },
+            type: Date,
+            default: Date.now,
         },
         username: {
             type: String,
             required: true,
         },
-        reactions: {}
+        reactions: [],
     },
 
     {
@@ -34,6 +35,6 @@ thoughtsSchema
         return this.reactions.length;
     })
 
-const Thoughts = model('Thoughts', userSchema);
+const Thoughts = model('Thoughts', thoughtsSchema);
 
 module.exports = Thoughts;

@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create User model
+// Schema to create reaction model
 const reactionSchema = new Schema(
     {
         reactionID: {
-       
+            type: Schema.Types.ObjectId,
+            default: () => new Types.ObjectId(),
         },
         reactionBody: {
             type: String,
@@ -16,8 +17,9 @@ const reactionSchema = new Schema(
             required: true,
         },
         createdAt: {
-            Date: { type: Date, default: Date.now },
-        }
+            type: Date,
+            default: Date.now,
+        },
     },
 
     {
