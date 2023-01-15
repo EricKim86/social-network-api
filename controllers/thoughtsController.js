@@ -1,4 +1,4 @@
-const { User, Thoughts } = require('../models');
+const { User, Thoughts, Reaction } = require('../models');
 
 module.exports = {
 
@@ -25,16 +25,16 @@ module.exports = {
   // create a new thought
   createThought(req, res) {
     Thoughts.create(req.body)
-    .then(({ _id }) => {
-      return User.findOneAndUpdate(
-        { username: req.body.username },
-        { $push: { thoughts: _id} },
-        { new: true },
+      .then(({ _id }) => {
+        return User.findOneAndUpdate(
+          { username: req.body.username },
+          { $push: { thoughts: _id } },
+          { new: true },
         )
-    })
+      })
       .then((user) => {
         if (!user) {
-          res.status(404).json({ message: 'Could not locate user' })
+          res.status(404).json({ message: 'Could not locate thought by the provided id' })
           return
         }
         res.json(user)
@@ -55,7 +55,7 @@ module.exports = {
       .select('-__v')
       .then((thoughts) =>
         !thoughts
-          ? res.status(404).json({ thoughts: 'No thought with this id!' })
+          ? res.status(404).json({ thoughts: 'No thought with the provided id!' })
           : res.json(thoughts)
       )
       .catch((err) => res.status(500).json(err));
@@ -73,5 +73,42 @@ module.exports = {
       .then(() => res.json({ message: 'User deleted!' }))
       .catch((err) => res.status(500).json(err));
   },
+  
+  // create a reaction
+  createReaction(req, res) {
+    Thoughts.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $push: { reactions: req.body } },
+      { new: true, runValidators: true },
+    )
+      .then((thoughts) => {
+        if (!thoughts) {
+          res.status(404).json({ message: 'Could not locate thought by the provided info' })
+          return
+        }
+        res.json(thoughts)
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      })
+  },
+
+  // delete a reaction
+  deleteReaction(req, res) {
+    Reaction.findOneAndDelete({ _id: req.params.thoughtId }, req.body, {
+      new: true,
+      runValidators: true,
+    })
+      .select('-__v')
+      .then((Reaction) =>
+        !Reaction
+          ? res.status(404).json({ message: 'No reaction with the provided ID' })
+          : res.json(Reaction)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+
+
 
 };
