@@ -25,13 +25,13 @@ module.exports = {
   // create a new thought
   createThought(req, res) {
     Thoughts.create(req.body)
-      .then(({ _id }) => {
-        return User.findOneAndUpdate(
-          { _id: body.username },
-          { $push: { thoughts: _id } },
-          { new: true },
+    .then(({ _id }) => {
+      return User.findOneAndUpdate(
+        { username: req.body.username },
+        { $push: { thoughts: _id} },
+        { new: true },
         )
-      })
+    })
       .then((user) => {
         if (!user) {
           res.status(404).json({ message: 'Could not locate user' })
@@ -63,27 +63,15 @@ module.exports = {
 
   // delete a thought
   deleteThought(req, res) {
-    Thoughts.findOneAndDelete({ _id: req.params.thoughtsId })
+    Thoughts.findOneAndDelete({ _id: req.params.thoughtId })
+      .select('-__v')
       .then((thoughts) =>
         !thoughts
-          ? res.status(404).json({ message: 'No such thought exists' })
-          : User.findOneAndUpdate(
-            { thoughts: req.params.thoughtId },
-            { $pull: { thoughts: req.params.thoughtsId } },
-            { new: true }
-          )
+          ? res.status(404).json({ message: 'No user with that ID' })
+          : thoughts.deleteMany({ _id: { $in: username } })
       )
-      .then((thoughts) =>
-        !thoughts
-          ? res.status(404).json({
-            message: 'Thought deleted, but no users found',
-          })
-          : res.json({ message: 'thought successfully deleted' })
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+      .then(() => res.json({ message: 'User deleted!' }))
+      .catch((err) => res.status(500).json(err));
   },
 
 };
