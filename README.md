@@ -14,7 +14,7 @@
   Video Walkthrough: HERE<br/>
 
   Get Category Example: <br/>
-  <img src="https://github.com/EricKim86/social-network-api /blob/main/assets/images/example.png?raw=true" width="600"/><br/>
+  <img src="https://github.com/EricKim86/social-network-api/blob/main/assets/images/example.png?raw=true" width="600"/><br/>
 
 
   ## Contribute
