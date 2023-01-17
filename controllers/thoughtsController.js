@@ -1,4 +1,4 @@
-const { User, Thoughts, Reaction } = require('../models');
+const { User, Thoughts } = require('../models');
 
 module.exports = {
 
@@ -63,7 +63,8 @@ module.exports = {
 
   // delete a thought
   deleteThought(req, res) {
-    Thoughts.findOneAndDelete({ _id: req.params.thoughtId })
+    Thoughts.findOneAndDelete(
+      { _id: req.params.thoughtId })
       .select('-__v')
       .then((thoughts) =>
         !thoughts
@@ -78,8 +79,8 @@ module.exports = {
   createReaction(req, res) {
     Thoughts.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $push: { reactions: req.body } },
-      { new: true, runValidators: true },
+      { $addToSet:{ reactions: req.body } },
+      { runValidators: true, new: true }
     )
       .then((thoughts) => {
         if (!thoughts) {
@@ -96,10 +97,11 @@ module.exports = {
 
   // delete a reaction
   deleteReaction(req, res) {
-    Reaction.findOneAndDelete({ _id: req.params.thoughtId }, req.body, {
-      new: true,
-      runValidators: true,
-    })
+    Thoughts.findOneAndUpdate(      
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { runValidators: true, new: true }
+      )
       .select('-__v')
       .then((Reaction) =>
         !Reaction

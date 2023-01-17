@@ -11,10 +11,10 @@
   ## Usage
   GitHub Repository: https://github.com/EricKim86/social-network-api <br/>
 
-  Video Walkthrough: HERE<br/>
+  Video Walkthrough: https://www.youtube.com/watch?v=kiFATRd5UdQ <br/>
 
   Get Category Example: <br/>
-  <img src="https://github.com/EricKim86/social-network-api /blob/main/assets/images/example.png?raw=true" width="600"/><br/>
+  <img src="https://github.com/EricKim86/social-network-api/blob/main/assets/images/example.png?raw=true" width="600"/><br/>
 
 
   ## Contribute

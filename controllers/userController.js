@@ -6,7 +6,7 @@ module.exports = {
   getUsers(req, res) {
     User.find()
       .select('-__v')
-      .then((users) => res.json(users))
+      .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
 
@@ -82,13 +82,13 @@ module.exports = {
       { $pull: { friends: req.params.friendId } },
       { new: true, runValidators: true },
     )
-    .select('-__v')
-    .then((user) =>
-      !user
-        ? res.status(404).json({ message: 'No user with that ID' })
-        : res.json(user)
-    )
-    .catch((err) => res.status(500).json(err));
-},
+      .select('-__v')
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: 'No user with that ID' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
 
 };
